@@ -1,15 +1,8 @@
-import os
 from skimage import io
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from skimage import data
-from skimage.color import rgb2gray, rgba2rgb
-from skimage.filters import threshold_local
-from PIL import Image
-import operator
-from skimage import img_as_ubyte
 
 
 def csv2np(imgs):
@@ -57,17 +50,6 @@ def rebuildimg(cp, u, v, b):
     return rimg
 
 
-p = 7
-q = 7
-a = pd.read_csv("1.csv")
-a = a.drop(a.columns[0], 1)
-a = csv2np(a)
-cp, u, v = TTwoDPCA(a, p, q)
-imgs = rebuildimg(cp, u, v, a.mean())
+# imgs = twodpca.rebuildimg(cp, u, v, a.mean())
 # io.imshow(imgs[1].astype(np.uint8), cmap=cm.gray)
 # plt.show()
-
-df2 = pd.DataFrame()
-for index in range(cp.shape[0]):
-    df2[index] = cp[index].reshape(p * q)
-(df2.T).to_csv("2.csv")

@@ -35,7 +35,7 @@ columns=[]
 for x in range(28*28):
 	columns.append('pixel'+ str(x))
 df = pd.DataFrame(columns=columns)
-for filename in glob.glob('capture/*.png'):
+for filename in glob.glob('./captcha/*.png'):
 	print(filename)
 	filename = os.path.join(filename)
 	moon = io.imread(filename)
