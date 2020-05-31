@@ -9,7 +9,7 @@ def csv2np(imgs):
     imgs = imgs.to_numpy()
     nimgs = np.empty(imgs.shape[0], np.ndarray)
     for index in range(imgs.shape[0]):
-        nimgs[index] = imgs[index].reshape(28, 28)
+        nimgs[index] = imgs[index].reshape(26, 26)
     return nimgs
 
 

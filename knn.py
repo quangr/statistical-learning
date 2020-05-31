@@ -23,16 +23,16 @@ class figure:
 		self.r2=max(mask[:,0])
 		self.c1=min(mask[:,1])
 		self.c2=max(mask[:,1])
-		self.data = np.ones((28,28), dtype=np.float64)
+		self.data = np.ones((26,26), dtype=np.float64)
 		for bb in mask:
 			self.data[bb[0]-self.r1+4,bb[1]-self.c1+4]=o[bb[0],bb[1]]
 		self.pixel=255-img_as_ubyte(self.data)
-		self.pixel=np.array(self.pixel).reshape(28*28)
+		self.pixel=np.array(self.pixel).reshape(26*26)
 
 image_list = []
 cc=0
 columns=[]
-for x in range(28*28):
+for x in range(26*26):
 	columns.append('pixel'+ str(x))
 df = pd.DataFrame(columns=columns)
 for filename in glob.glob('./captcha/*.png'):

@@ -3,8 +3,8 @@ import pandas as pd
 from sklearn import svm
 import twodpca
 
-p = 4
-q = 4
+p = 1
+q = 2
 a = pd.read_csv("./1.csv")
 a = a.drop(a.columns[0], 1)
 a = twodpca.csv2np(a)
@@ -20,5 +20,9 @@ clf.fit(X, y)
 test = pd.read_csv("./test/1.csv")
 test = test.drop(test.columns[0], 1)
 test = twodpca.csv2np(test)
-aaa=(np.dot(u.T,np.dot(test[1]-a.mean(),v))[28-p:28,28-q:28].T).reshape(p*q)
-print(clf.predict(pd.DataFrame(aaa).T))
+aaa = []
+for i in range(test.shape[0]):
+    test[i]=test[i]-a.mean()
+    aaa.append((np.dot(u.T,np.dot(test[i],v))[26-p:26,26-q:26].T).reshape(p*q))
+aa=pd.DataFrame(aaa)
+print(clf.predict(aa))
