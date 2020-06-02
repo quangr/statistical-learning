@@ -3,8 +3,8 @@ import pandas as pd
 from sklearn import svm
 import twodpca
 
-p = 1
-q = 2
+p = 9
+q = 9
 a = pd.read_csv("./1.csv")
 a = a.drop(a.columns[0], 1)
 a = twodpca.csv2np(a)

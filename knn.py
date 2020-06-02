@@ -27,7 +27,11 @@ class figure:
 		for bb in mask:
 			self.data[bb[0]-self.r1+4,bb[1]-self.c1+4]=o[bb[0],bb[1]]
 		self.pixel=255-img_as_ubyte(self.data)
-		self.pixel=np.array(self.pixel).reshape(26*26)
+		lc=np.sum((self.pixel>np.max(self.pixel)/2).T*np.arange(26))/np.sum(self.pixel>np.max(self.pixel)/2)-13
+		wc=np.sum((self.pixel>np.max(self.pixel)/2) * np.arange(26)) / np.sum(self.pixel>np.max(self.pixel)/2)-13
+		self.pixel=np.roll(self.pixel, -int(np.round(lc)), axis=0)
+		self.pixel=np.roll(self.pixel, -int(np.round(wc)), axis=1)
+		self.pixel=np.array((self.pixel >np.max(self.pixel)/2)).reshape(26*26)
 
 image_list = []
 cc=0
@@ -50,7 +54,7 @@ for filename in glob.glob('./captcha/*.png'):
 		b.append(figure(a[kmeans.predict(a)==i],moon))
 	b = sorted(b, key=operator.attrgetter('c1'))
 	for i in range(4):
-		im = Image.fromarray(img_as_ubyte(b[i].data))
+		im = Image.fromarray(img_as_ubyte(b[i].pixel.reshape([26,26])))
 		im.save("./figures/"+str(cc)+".jpg")
 		df.loc[cc]=b[i].pixel
 		cc=cc+1

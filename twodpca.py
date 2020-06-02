@@ -9,12 +9,12 @@ def csv2np(imgs):
     imgs = imgs.to_numpy()
     nimgs = np.empty(imgs.shape[0], np.ndarray)
     for index in range(imgs.shape[0]):
-        nimgs[index] = imgs[index].reshape(26, 26)
+        nimgs[index] = np.array(imgs[index].reshape(26, 26)>0,dtype=np.double)
     return nimgs
 
 
 def TwoDPCA(imgs, p):
-    b = imgs.mean()
+    b = b.mean()
     A = np.zeros([max(imgs[0].shape), max(imgs[0].shape)])
     for index in range(imgs.shape[0]):
         temp = imgs[index] - b
