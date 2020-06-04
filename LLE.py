@@ -96,9 +96,6 @@ def sinLLE(X,t,Nb):
     NN=40
     yy = pd.read_csv("2.csv")
     y = yy[yy.columns[0]]
-    nX=np.zeros([X.shape[0]+10,X.shape[1]])
-    nX[:y.shape[0],] = X[:y.shape[0],]
-    nX[y.shape[0] + 10:,] = X[y.shape[0]:,]
     result = pd.DataFrame()
     for kk in range(X.shape[0]-y.shape[0]):
         sl=np.zeros(X.shape[0],dtype=bool)
@@ -120,19 +117,34 @@ def sinLLE(X,t,Nb):
         K=np.dot((np.eye(N,N)-W).T,(np.eye(N,N)-W))
         w, v = np.linalg.eigh(K)
         ds = pd.DataFrame(v[:, 1:NN])
-        for k in range(20, 38):
+        for k in range(1, 38):
              XX = ds.loc[0:y.shape[0]-1,0:k]
              test = ds.loc[y.shape[0]:,0:k]
              clf = svm.SVC()
              clf.fit(XX, y)
              result.loc[kk,k] = clf.predict(test)[0]
     result.to_csv("./test/LLE.csv")
+def sort(X,Nb):
+    NN=20
+    D2 = np.tile(sum(X.T * X.T), [X.shape[0], 1])
+    S = D2 + D2.T - 2 * np.dot(X, X.T)
+    N = X.shape[0]
+    A = Knn(S, Nb)
+    W = LLE(X, A > 0)
+    K = np.dot((np.eye(N, N) - W).T, (np.eye(N, N) - W))
+    w, v = np.linalg.eigh(K)
+    ds = pd.DataFrame(v[:, 1:NN])
+    ds.to_csv("./LLE.csv")
+
 
 
 if __name__ == "__main__":
     a = pd.read_csv("./mix.csv")
+    y=a[a.columns[0]]
     a = a.drop(a.columns[0], 1)
     imgs = a.to_numpy()
     imgs = np.array(imgs > 0, dtype=np.double)
-    allLLE(imgs,0.5,90)
-    #sinLLE(imgs,0.5,8)
+    #allLLE(imgs,0.5,90)
+    sinLLE(imgs,0.5,8)
+    #imgs=imgs[y==6]
+    #sort(imgs,40)

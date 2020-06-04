@@ -1,11 +1,12 @@
 import numpy as np
 import pandas as pd
 from sklearn import svm
+from scipy import ndimage
 import scipy.sparse as sp
 
 
 def Knn(S,n):
-    mat = np.zeros([imgs.shape[0], imgs.shape[0]], dtype=np.int32)
+    mat = np.zeros([S.shape[0], S.shape[0]], dtype=np.int32)
     aa = np.argsort(S)
     for i in range(S.shape[0]):
         for r in aa[i,0:n]:
@@ -65,22 +66,24 @@ def predict():
             result[kk*20+k] = clf.predict(test)
     result.to_csv("./test/isomap.csv")
 
-if __name__ == "__main__":
-    a = pd.read_csv("./mix.csv")
-    y=a[a.columns[0]]
-    a = a.drop(a.columns[0], 1)
-    imgs = a.to_numpy()
-    imgs = np.array(imgs > 0, dtype=np.double)
-    imgs=imgs[y==1]
-    D2 = np.tile(sum(imgs.T * imgs.T), [imgs.shape[0],1])
-    S=D2+D2.T-2*np.dot(imgs,imgs.T)
-    result = pd.DataFrame()
-    A = Knn(S, 5)
+def isocor(img,k=2):
+    D2 = np.tile(sum(img.T * img.T), [img.shape[0], 1])
+    S = D2 + D2.T - 2 * np.dot(img, img.T)
+    A = Knn(S, 10)
     S1 = dijkstra(np.sqrt(A))
     N = S.shape[0]
     S2 = np.power(S1, 2) + np.power(S1, 2).T
     S2 = S2
     G = -.5 * (S2 - np.dot(sum(S2), np.ones(N)) / N - np.dot(np.ones(N), sum(S2)) / N + np.sum(S2) / (N * N))
     w, v = np.linalg.eigh(G)
-    ds = pd.DataFrame(v[:, N - 10:N])
-    ds.to_csv("isomap.csv")
+    return v[:, N - k:N]
+
+if __name__ == "__main__":
+    a = pd.read_csv("./mix.csv")
+    y=a[a.columns[0]]
+    a = a.drop(a.columns[0], 1)
+    imgs = a.to_numpy()
+    imgs = np.array(imgs > 0, dtype=np.double)
+    ds=np.zeros([y.shape[0],50])
+    for i in range(10):
+        isocor(imgs[y == i])

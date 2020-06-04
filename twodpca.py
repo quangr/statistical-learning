@@ -14,7 +14,7 @@ def csv2np(imgs):
 
 
 def TwoDPCA(imgs, p):
-    b = b.mean()
+    b = imgs.mean()
     A = np.zeros([max(imgs[0].shape), max(imgs[0].shape)])
     for index in range(imgs.shape[0]):
         temp = imgs[index] - b
@@ -52,4 +52,5 @@ def rebuildimg(cp, u, v, b):
 
 # imgs = twodpca.rebuildimg(cp, u, v, a.mean())
 # io.imshow(imgs[1].astype(np.uint8), cmap=cm.gray)
+# plt.imshow(imgs[353])
 # plt.show()

@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn import svm
 import twodpca
+import matplotlib.pyplot as plt
 
 p = 9
 q = 9
